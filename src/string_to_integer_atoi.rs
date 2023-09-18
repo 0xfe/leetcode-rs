@@ -9,7 +9,6 @@ enum State {
 }
 
 pub fn my_atoi(s: String) -> i32 {
-    println!("\ns: {}", s);
     use State::*;
 
     let mut state = Start;
