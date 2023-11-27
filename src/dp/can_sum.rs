@@ -1,7 +1,6 @@
 use std::collections::HashMap;
 
 pub fn can_sum_memoized(target: i32, numbers: &[i32], memo: &mut HashMap<i32, bool>) -> bool {
-    println!("target: {}, numbers: {:?}", target, numbers);
     if target == 0 {
         return true;
     };
