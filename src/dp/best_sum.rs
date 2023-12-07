@@ -30,13 +30,8 @@ pub fn best_sum_memoized(
         }
     }
 
-    if best_solution.is_none() {
-        memo.insert(target, None);
-        None
-    } else {
-        memo.insert(target, best_solution.clone());
-        best_solution
-    }
+    memo.insert(target, best_solution.clone());
+    best_solution
 }
 
 pub fn best_sum(target: i32, numbers: &[i32]) -> Option<Vec<i32>> {
