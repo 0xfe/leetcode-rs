@@ -17,24 +17,25 @@ pub fn best_sum_memoized(
         return memo.get(&target).unwrap().clone();
     }
 
-    let mut solutions = vec![];
+    let mut best_solution: Option<Vec<i32>> = None;
     for &num in numbers {
         let remainder = target - num;
 
         if let Some(solution) = best_sum_memoized(remainder, numbers, memo) {
             let mut solution = solution;
             solution.push(num);
-            solutions.push(solution);
+            if best_solution.is_none() || solution.len() < best_solution.as_ref().unwrap().len() {
+                best_solution = Some(solution);
+            }
         }
     }
 
-    if solutions.is_empty() {
+    if best_solution.is_none() {
         memo.insert(target, None);
         None
     } else {
-        let best_solution = solutions.iter().min_by(|a, b| a.len().cmp(&b.len()));
-        memo.insert(target, best_solution.cloned());
-        best_solution.cloned()
+        memo.insert(target, best_solution.clone());
+        best_solution
     }
 }
 
