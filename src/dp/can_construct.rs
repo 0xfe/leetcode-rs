@@ -52,5 +52,9 @@ mod tests {
             "eeeeee",
             &["e", "ee", "eee", "eeee", "eeeee"]
         ));
+        assert!(!can_construct(
+            "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeef",
+            &["e", "ee", "eee", "eeee", "eeeee"]
+        ));
     }
 }
