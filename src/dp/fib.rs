@@ -33,19 +33,19 @@ pub fn fib_memoized(n: u64) -> u64 {
 
 // Iterative version of fib(...)
 pub fn fib_iterative(n: u64) -> u64 {
-    let mut map = HashMap::new();
+    let mut tab = Vec::with_capacity(n as usize + 1);
 
-    map.insert(0, 0);
-    map.insert(1, 1);
+    tab.push(0);
+    tab.push(1);
 
     for i in 2..=n {
-        let a = map.get(&(i - 1)).unwrap();
-        let b = map.get(&(i - 2)).unwrap();
+        let a = tab.get((i - 1) as usize).unwrap();
+        let b = tab.get((i - 2) as usize).unwrap();
 
-        map.insert(i, a + b);
+        tab.push(a + b)
     }
 
-    *map.get(&n).unwrap()
+    *tab.get(n as usize).unwrap()
 }
 
 #[inline]
