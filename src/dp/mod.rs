@@ -4,4 +4,5 @@ pub mod can_construct;
 pub mod can_sum;
 pub mod count_construct;
 pub mod fib;
+pub mod grid_traveler;
 pub mod how_sum;
