@@ -22,7 +22,7 @@ pub fn can_construct_memoized(
             let suffix = target.strip_prefix(word).unwrap();
 
             if can_construct_memoized(suffix, word_bank, memo) {
-                memo.insert(suffix.into(), true);
+                memo.insert(target.into(), true);
                 return true;
             }
         }
