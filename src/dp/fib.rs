@@ -50,7 +50,10 @@ pub fn fib_iterative(n: u64) -> u64 {
 
 #[inline]
 pub fn fib(n: u64) -> u64 {
-    fib_iterative(n)
+    let a = fib_iterative(n);
+    let b = fib_memoized(n);
+    assert_eq!(a, b);
+    a
 }
 
 #[cfg(test)]
