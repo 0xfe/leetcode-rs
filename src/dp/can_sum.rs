@@ -25,9 +25,33 @@ pub fn can_sum_memoized(target: i32, numbers: &[i32], memo: &mut HashMap<i32, bo
     false
 }
 
+pub fn can_sum_iterative(target: i32, numbers: &[i32]) -> bool {
+    let mut tab = vec![false; (target + 1) as usize];
+    tab[0] = true;
+
+    for i in 0..=target {
+        if tab[i as usize] {
+            for j in numbers {
+                if i + j <= target {
+                    tab[(i + j) as usize] = true;
+                }
+
+                if i + j == target {
+                    return true;
+                }
+            }
+        }
+    }
+
+    false
+}
+
 pub fn can_sum(target: i32, numbers: &[i32]) -> bool {
     let mut memo = HashMap::new();
-    can_sum_memoized(target, numbers, &mut memo)
+    let a = can_sum_memoized(target, numbers, &mut memo);
+    let b = can_sum_iterative(target, numbers);
+    assert_eq!(a, b);
+    a
 }
 
 #[cfg(test)]
