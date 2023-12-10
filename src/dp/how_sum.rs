@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::{collections::HashMap, vec};
 
 pub fn how_sum_memoized(
     target: i32,
@@ -31,7 +31,36 @@ pub fn how_sum_memoized(
     None
 }
 
+pub fn how_sum_iterative(target: i32, numbers: &[i32]) -> Option<Vec<i32>> {
+    let mut tab = vec![None; (target + 1) as usize];
+    tab[0] = Some(vec![]);
+
+    for i in 0..=target {
+        if tab[i as usize].is_some() {
+            for j in numbers {
+                let loc = (i + j) as usize;
+                if i + j <= target {
+                    if tab[loc].is_none() {
+                        tab[loc] = tab[i as usize].clone();
+                    }
+
+                    if let Some(v) = &mut tab[loc] {
+                        v.push(*j);
+                    }
+                }
+
+                if i + j == target {
+                    return tab[loc].clone();
+                }
+            }
+        }
+    }
+
+    None
+}
+
 pub fn how_sum(target: i32, numbers: &[i32]) -> Option<Vec<i32>> {
+    // how_sum_iterative(target, numbers)
     let mut memo = HashMap::new();
     how_sum_memoized(target, numbers, &mut memo)
 }
