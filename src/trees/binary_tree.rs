@@ -1,4 +1,4 @@
-use std::fmt::Debug;
+use std::{collections::VecDeque, fmt::Debug};
 
 pub trait TreeNode: Eq + PartialEq + PartialOrd + Debug {}
 impl TreeNode for String {}
@@ -82,10 +82,19 @@ impl<T: TreeNode> BinaryTree<T> {
         }
     }
 
-    pub fn iter(&self) -> BinaryTreeIterator<T> {
+    pub fn bfs_iter(&self) -> BinaryTreeIterator<T> {
         BinaryTreeIterator {
             current: &self.root,
-            queue: vec![],
+            queue: VecDeque::new(),
+            strategy: Strategy::BreadthFirst,
+        }
+    }
+
+    pub fn dfs_iter(&self) -> BinaryTreeIterator<T> {
+        BinaryTreeIterator {
+            current: &self.root,
+            queue: VecDeque::new(),
+            strategy: Strategy::DepthFirst,
         }
     }
 }
@@ -96,22 +105,47 @@ impl<T: TreeNode> Default for BinaryTree<T> {
     }
 }
 
+enum Strategy {
+    BreadthFirst,
+    DepthFirst,
+}
+
 pub struct BinaryTreeIterator<'a, T: TreeNode> {
     current: &'a Option<Box<Node<T>>>,
-    queue: Vec<&'a Option<Box<Node<T>>>>,
+    queue: VecDeque<&'a Option<Box<Node<T>>>>,
+    strategy: Strategy,
+}
+
+impl<'a, T: TreeNode> BinaryTreeIterator<'a, T> {
+    fn bfs_next(&mut self) -> Option<&'a T> {
+        if let Some(node) = self.current {
+            self.queue.push_back(&node.left);
+            self.queue.push_back(&node.right);
+            self.current = self.queue.pop_front().unwrap_or(&None);
+            return Some(&node.value);
+        }
+        None
+    }
+
+    fn dfs_next(&mut self) -> Option<&'a T> {
+        if let Some(node) = self.current {
+            self.queue.push_front(&node.left);
+            self.current = self.queue.pop_front().unwrap_or(&None);
+            self.queue.push_front(&node.right);
+            return Some(&node.value);
+        }
+        None
+    }
 }
 
 impl<'a, T: TreeNode> Iterator for BinaryTreeIterator<'a, T> {
     type Item = &'a T;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if let Some(node) = self.current {
-            self.queue.push(&node.left);
-            self.queue.push(&node.right);
-            self.current = self.queue.pop().unwrap_or(&None);
-            return Some(&node.value);
+        match self.strategy {
+            Strategy::BreadthFirst => self.bfs_next(),
+            Strategy::DepthFirst => self.dfs_next(),
         }
-        None
     }
 }
 
@@ -218,7 +252,7 @@ mod tests {
     }
 
     #[test]
-    fn test_0002() {
+    fn bfs() {
         let mut tree = BinaryTree::new();
         tree.insert("F".to_string());
         tree.insert("B".to_string());
@@ -232,6 +266,24 @@ mod tests {
 
         tree.for_each(|n| println!("{}", n.value));
 
-        println!("{:?}", tree.iter().collect::<Vec<_>>());
+        println!("{:?}", tree.bfs_iter().collect::<Vec<_>>());
+    }
+
+    #[test]
+    fn dfs() {
+        let mut tree = BinaryTree::new();
+        tree.insert("F".to_string());
+        tree.insert("B".to_string());
+        tree.insert("G".to_string());
+        tree.insert("A".to_string());
+        tree.insert("D".to_string());
+        tree.insert("I".to_string());
+        tree.insert("C".to_string());
+        tree.insert("E".to_string());
+        tree.insert("H".to_string());
+
+        tree.for_each(|n| println!("{}", n.value));
+
+        println!("{:?}", tree.bfs_iter().collect::<Vec<_>>());
     }
 }
