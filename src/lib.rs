@@ -2,6 +2,7 @@ pub mod dp;
 pub mod trees;
 
 pub mod add_two_numbers;
+pub mod integer_to_roman;
 pub mod longest_palindromic_substring;
 pub mod longest_substring_without_repeating_characters;
 pub mod median_of_two_sorted_arrays;
